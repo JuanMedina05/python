@@ -1,0 +1,18 @@
+# Variables de entorno en python
+get->request.args.get()
+post->request.form.get()
+session->session.get()
+cookie->request.cookies.get()
+
+# Para borrar variables de entorno
+session.pop()
+
+# Depurador (Grant)
+@login_required -> sólo si ha iniciado sesión
+@roles_required('admin')
+
+# ifsset
+if 'var' in request.form:
+
+# if(empty)
+if not var
