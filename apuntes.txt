@@ -16,3 +16,7 @@ if 'var' in request.form:
 
 # if(empty)
 if not var
+
+# Para dar ruta y demás expecificaciones
+Blueprint(n,
+app.register_blueprint(n,url_prefix="/modelo")

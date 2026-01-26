@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Lista de Personajes{% endblock %}
+{% block content %}
+<h2>Personajes</h2>
+<p>Total de personajes: {{ characters|length }}</p>
+
+{% if characters %}
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Segundo Apellido</th>
+            <th>Nombre Corto</th>
+            <th>Apodo</th>
+            <th>Imagen</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for character in characters %}
+        <tr>
+            <td>{{ character.character_id }}</td>
+            <td>{{ character.name }}</td>
+            <td>{{ character.surname }}</td>
+            <td>{{ character.second_surname }}</td>
+            <td>{{ character.shortname }}</td>
+            <td>{{ character.nickname }}</td>
+            <td>
+                {% if character.image_url %}
+                <img src="{{ character.image_url }}" alt="{{ character.name }}" width="50">
+                {% else %}
+                Sin imagen
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No hay personajes en la base de datos. <a href="/characters/import">Importar personajes</a></p>
+{% endif %}
+{% endblock %}
