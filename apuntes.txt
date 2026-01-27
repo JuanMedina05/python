@@ -1,3 +1,7 @@
+# Iniciar proyecto
+python -m venv .venv
+.venv\Scripts\activate.bat
+
 # Variables de entorno en python
 get->request.args.get()
 post->request.form.get()
