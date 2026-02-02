@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Servicios - Gestión de Almacén{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Servicios</h1>
+        <a href="{{ url_for('servicios_nuevo') }}" class="btn btn-primary">➕ Nuevo Servicio</a>
+    </div>
+
+    <div class="toolbar">
+        <div class="toolbar-info">
+            Total: <strong>{{ servicios|length }}</strong> servicios
+        </div>
+    </div>
+
+    {% if servicios %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Fecha Entrada</th>
+                    <th>Fecha Salida</th>
+                    <th>Productos Bloqueados</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for servicio in servicios %}
+                <tr>
+                    <td class="font-semibold">{{ servicio.nombre }}</td>
+                    <td class="text-muted">{{ servicio.descripcion[:50] if servicio.descripcion else '-' }}{% if
+                        servicio.descripcion and servicio.descripcion|length > 50 %}...{% endif %}</td>
+                    <td>
+                        <span class="badge badge-{{ servicio.estado }}">{{ servicio.estado|upper }}</span>
+                    </td>
+                    <td>{{ servicio.fecha_entrada|date_format }}</td>
+                    <td>{{ servicio.fecha_salida|date_format or '-' }}</td>
+                    <td class="text-center">
+                        <span class="badge badge-count">{{ servicio.productos.count() }}</span>
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{{ url_for('servicios_detalle', id=servicio.id) }}" class="btn btn-xs btn-secondary"
+                            title="Ver detalles">👁️</a>
+                        <a href="{{ url_for('servicios_editar', id=servicio.id) }}" class="btn btn-xs btn-outline"
+                            title="Editar">✏️</a>
+                        <form method="POST" action="{{ url_for('servicios_eliminar', id=servicio.id) }}"
+                            style="display: inline;"
+                            onsubmit="return confirm('¿Estás seguro de que deseas eliminar este servicio?');">
+                            <button type="submit" class="btn btn-xs btn-danger" title="Eliminar">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">🔧</div>
+        <h3>No hay servicios</h3>
+        <p>Comienza creando tu primer servicio</p>
+        <a href="{{ url_for('servicios_nuevo') }}" class="btn btn-primary">➕ Crear Servicio</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Productos - Gestión de Almacén{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Productos</h1>
+        <a href="{{ url_for('productos_nuevo') }}" class="btn btn-primary">➕ Nuevo Producto</a>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="toolbar">
+        <form action="{{ url_for('productos_buscar') }}" method="get" class="search-form-inline">
+            <input type="text" name="q" placeholder="Buscar productos..." class="search-input">
+            <button type="submit" class="btn btn-secondary">🔍 Buscar</button>
+        </form>
+        <div class="toolbar-info">
+            Total: <strong>{{ productos|length }}</strong> productos
+        </div>
+    </div>
+
+    {% if productos %}
+    <div class="products-grid">
+        {% for producto in productos %}
+        <div class="product-card">
+            <div class="product-image">
+                {% if producto.imagen %}
+                <img src="{{ url_for('static', filename='uploads/' + producto.imagen) }}" alt="{{ producto.nombre }}">
+                {% else %}
+                <div class="product-image-placeholder">📦</div>
+                {% endif %}
+                {% if producto.esta_bloqueado %}
+                <span class="product-badge badge-blocked">🔒 Bloqueado</span>
+                {% endif %}
+            </div>
+            <div class="product-content">
+                <h3 class="product-title">{{ producto.nombre }}</h3>
+                <p class="product-code">Código: <strong>{{ producto.codigo }}</strong></p>
+                <p class="product-location">📍 {{ producto.ubicacion_completa }}</p>
+                <p class="product-quantity">Cantidad: <strong>{{ producto.cantidad }}</strong></p>
+                {% if producto.descripcion %}
+                <p class="product-description">{{ producto.descripcion[:100] }}{% if producto.descripcion|length > 100
+                    %}...{% endif %}</p>
+                {% endif %}
+            </div>
+            <div class="product-actions">
+                <a href="{{ url_for('productos_detalle', id=producto.id) }}" class="btn btn-sm btn-secondary">Ver
+                    Detalles</a>
+                <a href="{{ url_for('productos_editar', id=producto.id) }}" class="btn btn-sm btn-outline">Editar</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No hay productos</h3>
+        <p>Comienza agregando tu primer producto al almacén</p>
+        <a href="{{ url_for('productos_nuevo') }}" class="btn btn-primary">➕ Crear Producto</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
