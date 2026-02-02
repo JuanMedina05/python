@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}{% if servicio %}Editar Servicio{% else %}Nuevo Servicio{% endif %} - Gestión de Almacén{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">{% if servicio %}Editar Servicio{% else %}Nuevo Servicio{% endif %}</h1>
+        <a href="{{ url_for('servicios_lista') }}" class="btn btn-outline">← Volver</a>
+    </div>
+
+    <div class="form-container">
+        <form method="POST" class="form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre *</label>
+                    <input type="text" id="nombre" name="nombre" class="form-input"
+                        value="{% if servicio %}{{ servicio.nombre }}{% endif %}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado" class="form-label">Estado *</label>
+                    <select id="estado" name="estado" class="form-select" required>
+                        <option value="activo" {% if servicio and servicio.estado=='activo' %}selected{% endif %}>Activo
+                        </option>
+                        <option value="inactivo" {% if servicio and servicio.estado=='inactivo' %}selected{% endif %}>
+                            Inactivo</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" class="form-textarea"
+                        rows="3">{% if servicio %}{{ servicio.descripcion }}{% endif %}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha_salida" class="form-label">Fecha de Salida</label>
+                    <input type="date" id="fecha_salida" name="fecha_salida" class="form-input"
+                        value="{% if servicio and servicio.fecha_salida %}{{ servicio.fecha_salida.strftime('%Y-%m-%d') }}{% endif %}">
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label">Productos a Bloquear</label>
+                    <div class="products-selection">
+                        {% if productos_disponibles %}
+                        <div class="checkbox-grid">
+                            {% for producto in productos_disponibles %}
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="productos" value="{{ producto.id }}" class="checkbox-input"
+                                    {% if servicio and producto.id in productos_bloqueados_ids %}checked{% endif %}>
+                                <span class="checkbox-text">
+                                    <strong>{{ producto.codigo }}</strong> - {{ producto.nombre }}
+                                    <span class="text-muted">{{ producto.ubicacion_completa }}</span>
+                                </span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No hay productos disponibles. <a
+                                href="{{ url_for('productos_nuevo') }}">Crear producto</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 {% if servicio %}Actualizar{% else %}Crear{% endif %}
+                    Servicio</button>
+                <a href="{{ url_for('servicios_lista') }}" class="btn btn-outline">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

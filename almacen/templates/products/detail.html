@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}{{ producto.nombre }} - Gestión de Almacén{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">{{ producto.nombre }}</h1>
+        <div class="header-actions">
+            <a href="{{ url_for('productos_editar', id=producto.id) }}" class="btn btn-primary">✏️ Editar</a>
+            <form method="POST" action="{{ url_for('productos_eliminar', id=producto.id) }}" style="display: inline;"
+                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');">
+                <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <!-- Imagen del producto -->
+        <div class="detail-image">
+            {% if producto.imagen %}
+            <img src="{{ url_for('static', filename='uploads/' + producto.imagen) }}" alt="{{ producto.nombre }}">
+            {% else %}
+            <div class="detail-image-placeholder">📦</div>
+            {% endif %}
+            {% if producto.esta_bloqueado %}
+            <div class="status-badge badge-blocked">🔒 Producto Bloqueado</div>
+            {% else %}
+            <div class="status-badge badge-available">✅ Disponible</div>
+            {% endif %}
+        </div>
+
+        <!-- Información del producto -->
+        <div class="detail-info">
+            <div class="info-section">
+                <h2 class="info-title">Información General</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Código:</span>
+                        <span class="info-value code">{{ producto.codigo }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Cantidad:</span>
+                        <span class="info-value">{{ producto.cantidad }} unidades</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="info-label">Descripción:</span>
+                        <span class="info-value">{{ producto.descripcion or 'Sin descripción' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 class="info-title">Ubicación</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Pasillo:</span>
+                        <span class="info-value">{{ producto.pasillo or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Estante:</span>
+                        <span class="info-value">{{ producto.estante or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Nivel:</span>
+                        <span class="info-value">{{ producto.nivel or '-' }}</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="info-label">Ubicación completa:</span>
+                        <span class="info-value location">📍 {{ producto.ubicacion_completa }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 class="info-title">Fechas</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Fecha de Entrada:</span>
+                        <span class="info-value">{{ producto.fecha_entrada|datetime_format }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha de Salida:</span>
+                        <span class="info-value">{{ producto.fecha_salida|datetime_format or '-' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if servicios_bloqueados %}
+            <div class="info-section">
+                <h2 class="info-title">Servicios que Bloquean este Producto</h2>
+                <div class="services-list">
+                    {% for servicio in servicios_bloqueados %}
+                    <a href="{{ url_for('servicios_detalle', id=servicio.id) }}" class="service-item">
+                        <div class="service-name">{{ servicio.nombre }}</div>
+                        <div class="service-status status-{{ servicio.estado }}">{{ servicio.estado|upper }}</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="actions-footer">
+        <a href="{{ url_for('productos_lista') }}" class="btn btn-outline">← Volver a la lista</a>
+    </div>
+</div>
+{% endblock %}

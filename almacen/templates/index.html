@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Gestión de Almacén{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="container">
+        <h1 class="hero-title">Sistema de Gestión de Almacén</h1>
+        <p class="hero-subtitle">Controla tu inventario de forma eficiente</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Estadísticas -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ total_productos }}</div>
+                <div class="stat-label">Productos Totales</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔧</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ total_servicios }}</div>
+                <div class="stat-label">Servicios Totales</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ servicios_activos }}</div>
+                <div class="stat-label">Servicios Activos</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔒</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ productos_bloqueados }}</div>
+                <div class="stat-label">Productos Bloqueados</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones Rápidas -->
+    <section class="quick-actions">
+        <h2 class="section-title">Acciones Rápidas</h2>
+        <div class="actions-grid">
+            <a href="{{ url_for('productos_nuevo') }}" class="action-card">
+                <div class="action-icon">➕</div>
+                <h3>Nuevo Producto</h3>
+                <p>Agregar un producto al almacén</p>
+            </a>
+            <a href="{{ url_for('servicios_nuevo') }}" class="action-card">
+                <div class="action-icon">🛠️</div>
+                <h3>Nuevo Servicio</h3>
+                <p>Crear un servicio y bloquear productos</p>
+            </a>
+            <a href="{{ url_for('productos_lista') }}" class="action-card">
+                <div class="action-icon">📋</div>
+                <h3>Ver Productos</h3>
+                <p>Consultar inventario completo</p>
+            </a>
+            <a href="{{ url_for('servicios_lista') }}" class="action-card">
+                <div class="action-icon">📊</div>
+                <h3>Ver Servicios</h3>
+                <p>Gestionar servicios activos e inactivos</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Búsqueda Rápida -->
+    <section class="search-section">
+        <h2 class="section-title">Búsqueda Rápida</h2>
+        <form action="{{ url_for('productos_buscar') }}" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Buscar por código, nombre, descripción o ubicación..."
+                class="search-input" required>
+            <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}{{ servicio.nombre }} - Gestión de Almacén{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">{{ servicio.nombre }}</h1>
+        <div class="header-actions">
+            <a href="{{ url_for('servicios_editar', id=servicio.id) }}" class="btn btn-primary">✏️ Editar</a>
+            <form method="POST" action="{{ url_for('servicios_eliminar', id=servicio.id) }}" style="display: inline;"
+                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este servicio?');">
+                <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="detail-content">
+        <!-- Información del servicio -->
+        <div class="info-card">
+            <div class="info-section">
+                <h2 class="info-title">Información General</h2>
+
+                <div class="status-indicator">
+                    <span class="status-badge status-{{ servicio.estado }}">
+                        {% if servicio.estado == 'activo' %}✅{% else %}⏸️{% endif %} {{ servicio.estado|upper }}
+                    </span>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item full-width">
+                        <span class="info-label">Descripción:</span>
+                        <span class="info-value">{{ servicio.descripcion or 'Sin descripción' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 class="info-title">Fechas</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Fecha de Entrada:</span>
+                        <span class="info-value">{{ servicio.fecha_entrada|datetime_format }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha de Salida:</span>
+                        <span class="info-value">{{ servicio.fecha_salida|datetime_format or '-' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productos bloqueados -->
+        <div class="info-card">
+            <div class="info-section">
+                <h2 class="info-title">Productos Bloqueados ({{ productos_bloqueados|length }})</h2>
+
+                {% if productos_bloqueados %}
+                <div class="products-grid">
+                    {% for producto in productos_bloqueados %}
+                    <div class="product-card-mini">
+                        <div class="product-image-mini">
+                            {% if producto.imagen %}
+                            <img src="{{ url_for('static', filename='uploads/' + producto.imagen) }}"
+                                alt="{{ producto.nombre }}">
+                            {% else %}
+                            <div class="product-image-placeholder-mini">📦</div>
+                            {% endif %}
+                        </div>
+                        <div class="product-content-mini">
+                            <h4 class="product-title-mini">{{ producto.nombre }}</h4>
+                            <p class="product-code-mini">{{ producto.codigo }}</p>
+                            <p class="product-location-mini">📍 {{ producto.ubicacion_completa }}</p>
+                        </div>
+                        <div class="product-actions-mini">
+                            <a href="{{ url_for('productos_detalle', id=producto.id) }}"
+                                class="btn btn-xs btn-secondary">Ver</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state-mini">
+                    <p class="text-muted">No hay productos bloqueados para este servicio</p>
+                    <a href="{{ url_for('servicios_editar', id=servicio.id) }}" class="btn btn-sm btn-outline">Agregar
+                        Productos</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="actions-footer">
+        <a href="{{ url_for('servicios_lista') }}" class="btn btn-outline">← Volver a la lista</a>
+    </div>
+</div>
+{% endblock %}
