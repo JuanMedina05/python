@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Productos</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        
+    </tr>
+    {% for p in productos %}
+    <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.precio}}</td>
+        <td>
+            {% if p.imagen %}
+                <img src="{{ p.imagen }}" alt="{{ p.nombre }}" width="50">
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('productos_nuevo') }}">Crear producto</a>
+
+{% endblock %}

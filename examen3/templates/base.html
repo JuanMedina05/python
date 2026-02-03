@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}examen{% endblock %}</title>
+    {% block styles %} {% endblock %}
+</head>
+
+<body>
+    {% if session.get('username') %}
+        <p>Ha accedido cómo {{ session.get('username') }}, <a href="{{ url_for('logout') }}">logout</a></p>
+    {% else %}
+    {% endif %}
+    <header>
+        
+    </header>
+    {% block content %} {% endblock %}
+    {% block scripts %} {% endblock %}
+    <footer>
+    </footer>
+</body>
+
+</html>

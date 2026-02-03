@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}{% if producto %}Editar Producto{% else %}Nuevo Producto{% endif %} - Gestión de Almacén{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">{% if producto %}Editar Producto{% else %}Nuevo Producto{% endif %}</h1>
+        <a href="{{ url_for('productos') }}" class="btn btn-outline">← Volver</a>
+    </div>
+
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data" class="form" id="productForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" class="form-input"
+                        value="{% if producto %}{{ producto.nombre }}{% endif %}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="text" id="precio" name="precio" class="form-input"
+                        value="{% if producto %}{{ producto.precio }}{% endif %}" required>
+                </div>
+
+                <div>
+                    <label for="imagen" class="form-label">Imagen del Producto</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="imagen" name="imagen" class="file-input" accept="image/*">
+                    </div>
+                    {% if producto and producto.imagen %}
+                    <div class="current-image">
+                        <p class="text-sm">Imagen actual:</p>
+                        <img src="{{ url_for('static', filename='uploads/' + producto.imagen) }}"
+                            alt="{{ producto.nombre }}" class="preview-image">
+                    </div>
+                    {% endif %}
+                    <div id="imagePreview" class="image-preview"></div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 {% if producto %}Actualizar{% else %}Crear{% endif %}
+                    Producto</button>
+                <a href="{{ url_for('productos') }}" class="btn btn-outline">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Preview de imagen antes de subir
+    document.getElementById('imagen').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('imagePreview');
+        const fileText = document.querySelector('.file-text');
+
+        if (file) {
+            fileText.textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.innerHTML = `
+                <p class="text-sm">Vista previa:</p>
+                <img src="${e.target.result}" alt="Preview" class="preview-image">
+            `;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            fileText.textContent = 'Seleccionar imagen...';
+            preview.innerHTML = '';
+        }
+    });
+</script>
+{% endblock %}
