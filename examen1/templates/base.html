@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Examen Restaurante{% endblock %}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f4f6f9; }
+        header { background: #1f2937; color: white; padding: 1rem; display: flex; justify-content: space-between; }
+        main { padding: 1rem; }
+        .card { background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+        th, td { border: 1px solid #ddd; padding: .5rem; text-align: left; }
+        th { background: #eef2ff; }
+        input, select, button { padding: .4rem; margin: .2rem 0; }
+        .ok { background: #d1fae5; padding: .5rem; border-radius: 4px; margin-bottom: .5rem; }
+        .error { background: #fee2e2; padding: .5rem; border-radius: 4px; margin-bottom: .5rem; }
+    </style>
+</head>
+<body>
+<header>
+    <div><strong>Restaurante - Gestión</strong></div>
+    <div>
+        {% if session.username %}
+            Usuario: {{ session.username }} ({{ session.role }}) -
+            <a style="color:white" href="{{ url_for('logout') }}">Cerrar sesión</a>
+        {% endif %}
+    </div>
+</header>
+<main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, msg in messages %}
+                <div class="{{ category }}">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

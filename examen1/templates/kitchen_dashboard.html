@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Panel Cocina{% endblock %}
+{% block content %}
+<h2>Panel Cocina</h2>
+<div class="card">
+    <h3>Cola de trabajo (ordenada por antigüedad)</h3>
+    <table>
+        <thead><tr><th>Pedido</th><th>Mesa</th><th>Plato</th><th>Cantidad</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+        {% for item, table, menu in queue %}
+            <tr>
+                <td>{{ item.order_id }}</td>
+                <td>{{ table.number }} - {{ table.name }}</td>
+                <td>{{ menu.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.status }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('kitchen_change_status', item_id=item.id) }}" style="display:inline;">
+                        <input type="hidden" name="status" value="en_preparacion">
+                        <button type="submit">En preparación</button>
+                    </form>
+                    <form method="post" action="{{ url_for('kitchen_change_status', item_id=item.id) }}" style="display:inline;">
+                        <input type="hidden" name="status" value="listo">
+                        <button type="submit">Listo</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

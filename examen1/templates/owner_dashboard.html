@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Panel Dueño{% endblock %}
+{% block content %}
+<h2>Panel Dueño</h2>
+<div class="grid">
+    <div class="card">
+        <h3>Crear elemento de carta</h3>
+        <form method="post" action="{{ url_for('owner_menu_create') }}" enctype="multipart/form-data">
+            <input name="name" placeholder="Nombre" required><br>
+            <select name="kind" required>
+                <option value="plato">Plato</option>
+                <option value="bebida">Bebida</option>
+            </select><br>
+            <input type="number" step="0.01" name="price" placeholder="Precio" required><br>
+            <input type="file" name="image" accept="image/*"><br>
+            <button type="submit">Crear</button>
+        </form>
+    </div>
+    <div class="card">
+        <h3>Crear mesa</h3>
+        <form method="post" action="{{ url_for('owner_table_create') }}">
+            <input type="number" name="number" placeholder="Nº mesa" required><br>
+            <input name="name" placeholder="Nombre mesa" required><br>
+            <button type="submit">Crear mesa</button>
+        </form>
+    </div>
+    <div class="card">
+        <h3>Informes de ingresos</h3>
+        <p><strong>Total recaudado hoy:</strong> {{ day_total }} EUR</p>
+        <table>
+            <thead><tr><th>Mesa</th><th>Total histórico</th></tr></thead>
+            <tbody>
+            {% for row in table_income %}
+                <tr><td>{{ row.table.number }} - {{ row.table.name }}</td><td>{{ row.total }} EUR</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Carta (CRUD)</h3>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Tipo</th><th>Precio</th><th>Imagen</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+        {% for item in menu_items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.kind }}</td>
+                <td>{{ item.price }} EUR</td>
+                <td>
+                    {% if item.image_path %}
+                        <img src="{{ item.image_path }}" alt="{{ item.name }}" style="height:45px;">
+                    {% else %}
+                        Sin imagen
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{{ url_for('owner_menu_delete', item_id=item.id) }}" style="display:inline;">
+                        <button type="submit">Borrar</button>
+                    </form>
+                    <form method="post" action="{{ url_for('owner_menu_update', item_id=item.id) }}" enctype="multipart/form-data">
+                        <input name="name" placeholder="Nuevo nombre">
+                        <select name="kind"><option value="plato">Plato</option><option value="bebida">Bebida</option></select>
+                        <input type="number" step="0.01" name="price" placeholder="Nuevo precio">
+                        <input type="file" name="image" accept="image/*">
+                        <button type="submit">Actualizar</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Mesas disponibles</h3>
+    <table>
+        <thead><tr><th>Número</th><th>Nombre</th><th>Estado</th></tr></thead>
+        <tbody>
+        {% for table in tables %}
+            <tr>
+                <td>{{ table.number }}</td>
+                <td>{{ table.name }}</td>
+                <td>{% if table.is_paid %}Libre{% else %}Ocupada{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

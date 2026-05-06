@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Panel Camarero{% endblock %}
+{% block content %}
+<h2>Panel Camarero</h2>
+<div class="grid">
+    <div class="card">
+        <h3>Nueva línea de comanda</h3>
+        <form method="post" action="{{ url_for('waiter_add_item') }}">
+            <label>Mesa</label><br>
+            <select name="table_id" required>
+                {% for t in tables %}
+                    <option value="{{ t.id }}">{{ t.number }} - {{ t.name }}</option>
+                {% endfor %}
+            </select><br>
+            <label>Producto</label><br>
+            <select name="menu_item_id" required>
+                {% for p in menu_items %}
+                    <option value="{{ p.id }}">{{ p.name }} ({{ p.kind }}) - {{ p.price }} EUR</option>
+                {% endfor %}
+            </select><br>
+            <label>Cantidad</label><br>
+            <input type="number" name="quantity" value="1" min="1"><br>
+            <button type="submit">Añadir a comanda</button>
+        </form>
+    </div>
+    <div class="card">
+        <h3>Platos listos para servir</h3>
+        <table>
+            <thead><tr><th>Mesa</th><th>Producto</th><th>Cantidad</th><th></th></tr></thead>
+            <tbody>
+            {% for item, table in ready_items %}
+                <tr>
+                    <td>{{ table.number }} - {{ table.name }}</td>
+                    <td>{{ item.menu_item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('waiter_mark_delivered', item_id=item.id) }}">
+                            <button type="submit">Marcar entregado</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Cierre de mesa</h3>
+    <table>
+        <thead><tr><th>Mesa</th><th>Total actual</th><th>Comanda</th><th>Acción</th></tr></thead>
+        <tbody>
+        {% for row in table_totals %}
+            <tr>
+                <td>{{ row.table.number }} - {{ row.table.name }}</td>
+                <td>{{ row.total }} EUR</td>
+                <td>{{ row.order_id or "-" }}</td>
+                <td>
+                    {% if row.order_id %}
+                    <form method="post" action="{{ url_for('waiter_pay_table', table_id=row.table.id) }}">
+                        <button type="submit">Marcar pagada</button>
+                    </form>
+                    {% else %}
+                        Sin cuenta abierta
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

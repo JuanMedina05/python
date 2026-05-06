@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="card" style="max-width:420px; margin: 2rem auto;">
+    <h2>Iniciar sesión</h2>
+    <form method="post">
+        <label>Usuario</label><br>
+        <input type="text" name="username" required><br>
+        <label>Contraseña</label><br>
+        <input type="password" name="password" required><br>
+        <button type="submit">Entrar</button>
+    </form>
+    <p><strong>Demo:</strong> dueno/dueno123, camarero/camarero123, cocina/cocina123</p>
+</div>
+{% endblock %}
